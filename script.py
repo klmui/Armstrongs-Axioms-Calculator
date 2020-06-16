@@ -4,7 +4,8 @@ using Armstrong's Axioms. This script will apply the reflexivity, augmentation,
 and transitivity rules to a given set S.
 
 Input: S (list of tuples). A tuple: (X, Y) means X -> Y. Please represent your 
-       attributes in the list of tuples as one character. E.g. id is X.
+       attributes in the list of tuples as one character. E.g. id is X. You
+       may also combine attributes and represent them as two letters combined.
 Output: S+ (set). This includes the original set S and additional dependencies
 """
 import copy
@@ -82,12 +83,11 @@ def armstrongsAxioms(fds):
         print(fd)
         
 """
-ENTER YOUR INPUT HERE. The first value in the tuple represents the attribute(s) that
+ENTER YOUR INPUT BELOW. The first value in the tuple represents the attribute(s) that
 determines the attribute(s) in the second value of the tuple. 
 
 Make sure to represent your attributes as a single character as shown below. 
 For example, id is x.
-
 Just modify the example below.
 """
 armstrongsAxioms([("a", "b"), ("b", "c"), ("cd", "e")])
