@@ -58,7 +58,7 @@ def armstrongsAxioms(fd):
                     newRel0 = newRel0 + char
                 if (char not in newRel1):
                     newRel1 = newRel1 + char
-            toReturn2.append((newRel0, newRel1))
-    print(toReturn2)
+            toReturn2.append((''.join(sorted(newRel0)), ''.join(sorted(newRel1))))
+    print(list(dict.fromkeys(toReturn2)))
 armstrongsAxioms([("a", "b"), ("b", "c"), ("cd", "e")])
                 
