@@ -3,19 +3,21 @@ Calculates additional functional dependencies when implementing a database
 using Armstrong's Axioms. This script will apply the reflexivity, augmentation,
 and transitivity rules to a given set S.
 
-Input: S (list of tuples). A tuple: (X, Y) means X -> Y
+Input: S (list of tuples). A tuple: (X, Y) means X -> Y. Please represent your 
+       attributes in the list of tuples as one character. E.g. id is X.
 Output: S+ (set). This includes the original set S and additional dependencies
 """
 import copy
 import itertools
-def armstrongsAxioms(fd):
-    if not isinstance(fd, list):
-        raise TypeError("Expected list, got %s", type(fd))
+from collections import defaultdict
+def armstrongsAxioms(fds):
+    if not isinstance(fds, list):
+        raise TypeError("Expected list, got %s", type(fds))
     
-    toReturn1 = copy.deepcopy(fd)
+    toReturn1 = copy.deepcopy(fds)
     
     # Apply reflexivity rule
-    for rel in fd:
+    for rel in fds:
         if not isinstance(rel, tuple):
             raise TypeError("Expected tuple, got %s", type(rel))
         if (len(rel[0]) > 1):
@@ -28,16 +30,16 @@ def armstrongsAxioms(fd):
             # Add each substring to toReturn
             for substr in listOfSubstrings:
                 toReturn1.append((rel[0], substr))
-    print(toReturn1)
+    #print("toRet1",toReturn1)
     
     # Apply augmentation rule
     # 1. Find all unique characters
     setOfChars = set()
-    for rel in fd:
+    for rel in fds:
         for attributes in rel[0]:
             for char in attributes:
                 setOfChars.add(char)
-    print(setOfChars)
+    #print("setOfChars",setOfChars)
     # 2. Get all substrings
     listOfSubstrings = []
     for i in range(1, len(setOfChars)+1):
@@ -46,7 +48,7 @@ def armstrongsAxioms(fd):
             for char in subset:
                 chars = chars + char
             listOfSubstrings.append(chars)
-    print(listOfSubstrings)
+    #print("listOfSubstrings",listOfSubstrings)
     # 3. Append substrings of allChars to both sides of relation
     toReturn2 = copy.deepcopy(toReturn1)
     for rel in toReturn1:
@@ -59,6 +61,34 @@ def armstrongsAxioms(fd):
                 if (char not in newRel1):
                     newRel1 = newRel1 + char
             toReturn2.append((''.join(sorted(newRel0)), ''.join(sorted(newRel1))))
-    print(list(dict.fromkeys(toReturn2)))
+    #print("toRet2",list(dict.fromkeys(toReturn2)))
+    
+    # Apply transitivity rule
+    toReturn3 = copy.deepcopy(toReturn2)
+    destinations = defaultdict(set)
+    for rel in toReturn2:
+        destinations[rel[0]].add(rel[1])
+    #print("dests",destinations)
+    for key, value in destinations.items():
+        for dest in value:
+            if (dest in destinations.keys()):
+                for char in destinations[dest]:
+                    newTuple = (key, char)
+                    toReturn3.append(newTuple)
+    #print("toRet3", toReturn3)
+    
+    # Print out all functional dependencies
+    for fd in toReturn3:
+        print(fd)
+        
+"""
+ENTER YOUR INPUT HERE. The first value in the tuple represents the attribute(s) that
+determines the attribute(s) in the second value of the tuple. 
+
+Make sure to represent your attributes as a single character as shown below. 
+For example, id is x.
+
+Just modify the example below.
+"""
 armstrongsAxioms([("a", "b"), ("b", "c"), ("cd", "e")])
                 
